@@ -11,6 +11,9 @@ export class Album {
     title: string;
 
     @Column({ nullable: true })
+    test: string;
+
+    @Column({ nullable: true })
     releaseYear?: number;
 
     @ManyToOne(() => Artist, (artist) => artist.albums)

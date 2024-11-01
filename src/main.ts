@@ -8,15 +8,15 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false });
 
-  app.enableCors({ credentials: true, origin: true });// Включение CORS
+  // app.enableCors({ credentials: true, origin: true });// Включение CORS
   app.useGlobalPipes(new ValidationPipe())// Валидация
   app.useLogger(new Logger()); // Инициализация логгера
 
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));// раздача статики
 
   const config = new DocumentBuilder()
-    .setTitle('Smart teach swagger API')
-    .setDescription('The smart-teach API description')
+    .setTitle('Analog Harmony swagger API')
+    .setDescription('The Analog Harmony API description')
     .setVersion('1.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
