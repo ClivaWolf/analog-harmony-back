@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { BaseService } from 'src/shared/base.service';
+import { Artist } from './entities/artist.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistsService {
+  constructor(
+    @InjectRepository(Artist)
+    private repository: Repository<Artist>
+  ) {}
+
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    return this.repository.save(createArtistDto);
   }
 
   findAll() {
-    return `This action returns all artists`;
+    return this.repository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} artist`;
+    return this.repository.findOne({ where: { id } });
   }
 
   update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+    return this.repository.update(id, updateArtistDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} artist`;
+    return this.repository.delete(id);
   }
 }
