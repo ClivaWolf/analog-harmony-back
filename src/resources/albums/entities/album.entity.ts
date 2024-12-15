@@ -1,6 +1,6 @@
 import { Artist } from 'src/resources/artists/entities/artist.entity';
 import { Item } from 'src/resources/items/entities/item.entity';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Album {
@@ -11,12 +11,10 @@ export class Album {
     title: string;
 
     @Column({ nullable: true })
-    test: string;
-
-    @Column({ nullable: true })
     releaseYear?: number;
 
     @ManyToOne(() => Artist, (artist) => artist.albums)
+    @JoinColumn({ name: 'artist_id' })
     artist: Artist;
 
     @Column({ nullable: true })

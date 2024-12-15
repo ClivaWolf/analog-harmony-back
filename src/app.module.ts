@@ -11,6 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseModule } from './app/database.module';
 import { TypeOrmConfig } from './app/type-orm.config';
+import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './resources/files/files.module';
 
 @Module({
   imports: [
@@ -22,12 +24,14 @@ import { TypeOrmConfig } from './app/type-orm.config';
       },
       inject: [ConfigService, TypeOrmConfig],
     }),
+    FilesModule,
     AlbumsModule,
     ArtistsModule,
     FormatsModule,
     ItemsModule,
     OrdersModule,
-    UsersModule],
+    UsersModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

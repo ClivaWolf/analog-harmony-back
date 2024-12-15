@@ -1,19 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Album } from './entities/album.entity';
+import { Artist } from '../artists/entities/artist.entity';
 
 @Injectable()
 export class AlbumsService {
-  create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+  constructor(
+    @InjectRepository(Album)
+    private readonly repository: Repository<Album>,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
+  ) {  }
+  async create(createAlbumDto: CreateAlbumDto) {
+    const existingArtist = await this.artistRepository.findOne({ where: { id: createAlbumDto.artistId } });
+
+    if (!existingArtist) {
+      throw new NotFoundException(`Artist with ID ${createAlbumDto.artistId} not found`);
+    }
+
+    const album = new Album();
+    Object.assign(album, createAlbumDto);
+    album.artist = existingArtist;
+
+    return this.repository.save(album);
   }
 
   findAll() {
-    return `This action returns all albums`;
+    return this.repository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} album`;
+    return this.repository.findOne({ where: { id }, relations: ['artist'] });
   }
 
   update(id: number, updateAlbumDto: UpdateAlbumDto) {

@@ -1,5 +1,7 @@
 import { Order } from 'src/resources/orders/entities/order.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Profile } from './user-profile.entity';
+import { File } from 'src/resources/files/entities/file.entity';
 
 @Entity()
 export class User {
@@ -7,13 +9,13 @@ export class User {
     id: number;
 
     @Column({ unique: true })
-    username: string;
+    login: string;
 
     @Column({ unique: true })
     email: string;
 
     @Column()
-    passwordHash: string;
+    password: string;
 
     @Column({
         type: 'enum',
@@ -27,6 +29,13 @@ export class User {
 
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
+
+    @OneToOne(() => Profile, profile => profile.user, { nullable: true, cascade: true })
+    @JoinColumn()
+    profile?: Profile;
+
+    @OneToMany(() => File, (file) => file.user)
+    files: File[];
 }
 
 
